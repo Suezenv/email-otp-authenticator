@@ -1,4 +1,4 @@
-set quiet
+#set quiet
 
 # Default recipe to display help information
 [private]
