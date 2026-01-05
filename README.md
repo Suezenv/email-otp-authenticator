@@ -32,8 +32,8 @@ Add the following to your Dockerfile:
 
 ```dockerfile
 # Download and install the authenticator
-ARG EMAIL_OTP_AUTHENTICATOR_VERSION="v1.1.4" # x-release-please-version
-ARG EMAIL_OTP_AUTHENTICATOR_KC_VERSION="26.2.0"
+ARG EMAIL_OTP_AUTHENTICATOR_VERSION="v1.2.0" # x-release-please-version
+ARG EMAIL_OTP_AUTHENTICATOR_KC_VERSION="26.4.0"
 ADD https://github.com/for-keycloak/email-otp-authenticator/releases/download/${EMAIL_OTP_AUTHENTICATOR_VERSION}/email-otp-authenticator-${EMAIL_OTP_AUTHENTICATOR_VERSION}-kc-${EMAIL_OTP_AUTHENTICATOR_KC_VERSION}.jar \
     /opt/keycloak/providers/email-otp-authenticator.jar
 ```
@@ -55,7 +55,7 @@ ADD https://github.com/for-keycloak/email-otp-authenticator/releases/download/${
 
 Using just:
 ```bash
-# Build for the default Keycloak version (26.2.0)
+# Build for the default Keycloak version (26.4.0)
 just build
 
 # Build for a specific Keycloak version
@@ -98,7 +98,8 @@ Access:
 
 The authenticator is built and tested with multiple Keycloak versions:
 
-- 26.2.0 (default)
+- 26.4.0 (default)
+- 26.2.0
 - 26.1.5
 - 26.0.8
 - 25.0.6
