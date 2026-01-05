@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/for-keycloak/email-otp-authenticator/compare/main...v1.2.1)
+
+## Features
+* feat(keycloak-mfa): add Email OTP action for enforce-mfa (netzbegruen… by @wdhaoui in https://github.com/Suezenv/email-otp-authenticator/pull/1
+
+
 ## [1.1.4](https://github.com/for-keycloak/email-otp-authenticator/compare/v1.1.3...v1.1.4) (2025-05-05)
 
 
