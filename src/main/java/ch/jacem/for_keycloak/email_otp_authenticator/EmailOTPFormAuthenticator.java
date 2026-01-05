@@ -8,10 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.security.SecureRandom;
 
+import org.keycloak.authentication.CredentialValidator;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
+import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.RequiredActionFactory;
+import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAuthenticator;
+import org.keycloak.authentication.requiredactions.VerifyEmail;
+import org.keycloak.credential.CredentialProvider;
 import org.keycloak.email.EmailTemplateProvider;
 import org.keycloak.events.Errors;
 import org.keycloak.forms.login.LoginFormsProvider;
@@ -23,13 +28,13 @@ import org.keycloak.models.UserModel;
 import org.keycloak.services.messages.Messages;
 import org.keycloak.sessions.AuthenticationSessionModel;
 
-import ch.jacem.for_keycloak.email_otp_authenticator.authentication.authenticators.conditional.AcceptsFullContextInConfiguredFor;
 import ch.jacem.for_keycloak.email_otp_authenticator.helpers.ConfigHelper;
 
 import org.jboss.logging.Logger;
 
-public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator implements AcceptsFullContextInConfiguredFor
-{
+import java.util.Collections;
+
+public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator implements Authenticator, CredentialValidator<EmailOTPFormCredentialProvider> {
     public static final String AUTH_NOTE_OTP_KEY = "for-kc-email-otp-key";
     public static final String AUTH_NOTE_OTP_CREATED_AT = "for-kc-email-otp-created-at";
 
@@ -53,7 +58,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
         if (userEnabled) {
             context.getAuthenticationSession().removeAuthNote(AbstractUsernameFormAuthenticator.SESSION_INVALID);
         }
-        if("true".equals(context.getAuthenticationSession().getAuthNote(AbstractUsernameFormAuthenticator.SESSION_INVALID))) {
+        if ("true".equals(context.getAuthenticationSession().getAuthNote(AbstractUsernameFormAuthenticator.SESSION_INVALID))) {
             context.getEvent().user(context.getUser()).error(Errors.INVALID_AUTHENTICATION_SESSION);
             // challenge already set by calling enabledUser() above
             return;
@@ -144,7 +149,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
     protected Response createLoginForm(LoginFormsProvider form) {
         return form.createForm(OTP_FORM_TEMPLATE_NAME);
     }
-
+/*
     @Override
     public boolean configuredFor(AuthenticationFlowContext context, AuthenticatorConfigModel config) {
         RealmModel realm = context.getRealm();
@@ -163,11 +168,11 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
         }
 
         return null != user.getEmail() && !user.getEmail().isEmpty();
-    }
+    }*/
 
     @Override
     public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-        return null != user.getEmail() && !user.getEmail().isEmpty();
+        return getCredentialProvider(session).isConfiguredFor(realm, user, getType(session));
     }
 
     @Override
@@ -177,16 +182,23 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
 
     @Override
     public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
+        user.addRequiredAction(EmailOTPValidationRequireAction.PROVIDER_ID);
     }
 
     @Override
     public List<RequiredActionFactory> getRequiredActions(KeycloakSession session) {
-        return null;
+        return Collections.singletonList((EmailOTPValidationRequireActionFactory) session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, EmailOTPValidationRequireAction.PROVIDER_ID));
     }
 
     @Override
     public void close() {
     }
+
+    @Override
+    public EmailOTPFormCredentialProvider getCredentialProvider(KeycloakSession session) {
+        return (EmailOTPFormCredentialProvider) session.getProvider(CredentialProvider.class, EmailOTPFormCredentialProviderFactory.PROVIDER_ID);
+    }
+
 
     private String generateOtp(AuthenticationFlowContext context, boolean forceRegenerate) {
         // If the OTP is already set in the auth session and we are not forcing a regeneration, return it
