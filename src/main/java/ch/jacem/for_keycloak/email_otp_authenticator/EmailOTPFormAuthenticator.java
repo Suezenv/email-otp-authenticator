@@ -25,6 +25,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.utils.FormMessage;
 import org.keycloak.services.messages.Messages;
 import org.keycloak.sessions.AuthenticationSessionModel;
 
@@ -77,7 +78,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
 
             // Reshow the form
             context.challenge(
-                this.challenge(context, null)
+                this.challenge(context, null, null, "infoResendingEmailOtp")
             );
 
             return;
@@ -87,7 +88,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
 
         if (null == otp) {
             context.challenge(
-                this.challenge(context, null)
+                this.challenge(context, null, null, null)
             );
 
             return;
@@ -97,7 +98,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
             context.getEvent().user(user).error(Errors.INVALID_USER_CREDENTIALS);
             context.failureChallenge(
                 AuthenticationFlowError.INVALID_CREDENTIALS,
-                this.challenge(context, "errorInvalidEmailOtp", OTP_FORM_CODE_INPUT_NAME)
+                this.challenge(context, "errorInvalidEmailOtp", OTP_FORM_CODE_INPUT_NAME, null)
             );
 
             return;
@@ -111,7 +112,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
             context.getEvent().user(user).error(Errors.EXPIRED_CODE);
             context.failureChallenge(
                 AuthenticationFlowError.INVALID_CREDENTIALS,
-                this.challenge(context, "errorExpiredEmailOtp", OTP_FORM_CODE_INPUT_NAME)
+                this.challenge(context, "errorExpiredEmailOtp", OTP_FORM_CODE_INPUT_NAME, null)
             );
 
             return;
@@ -131,7 +132,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
         this.generateOtp(context, false);
 
         context.challenge(
-            this.challenge(context, null)
+            this.challenge(context, null, null, "infoSendingEmailOtp")
         );
     }
 
@@ -143,6 +144,23 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
     @Override
     protected String disabledByBruteForceFieldError() {
         return OTP_FORM_CODE_INPUT_NAME;
+    }
+
+    protected Response challenge(AuthenticationFlowContext context, String error, String field, String info) {
+        LoginFormsProvider form = context.form().setExecution(context.getExecution().getId());
+        if (error != null) {
+            if (field != null) {
+                form.addError(new FormMessage(field, error));
+            } else {
+                form.setError(error, new Object[0]);
+            }
+        }
+
+        if (info != null) {
+            form.setInfo(info);
+        }
+
+        return this.createLoginForm(form);
     }
 
     @Override
@@ -235,7 +253,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
             context.getEvent().user(context.getUser()).error(Errors.INVALID_USER_CREDENTIALS);
             context.failureChallenge(
                 AuthenticationFlowError.INTERNAL_ERROR,
-                this.challenge(context, Messages.INTERNAL_SERVER_ERROR, null)
+                this.challenge(context, Messages.INTERNAL_SERVER_ERROR, null, null)
             );
 
             return;
@@ -250,7 +268,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
             context.getEvent().user(user).error(Errors.INVALID_EMAIL);
             context.failureChallenge(
                 AuthenticationFlowError.INVALID_USER,
-                this.challenge(context, Messages.INVALID_EMAIL, null)
+                this.challenge(context, Messages.INVALID_EMAIL, null, null)
             );
 
             return;
@@ -278,7 +296,7 @@ public class EmailOTPFormAuthenticator extends AbstractUsernameFormAuthenticator
             context.getEvent().user(user).error(Errors.EMAIL_SEND_FAILED);
             context.failureChallenge(
                 AuthenticationFlowError.INTERNAL_ERROR,
-                this.challenge(context, Messages.EMAIL_SENT_ERROR, null)
+                this.challenge(context, Messages.EMAIL_SENT_ERROR, null, null)
             );
         }
     }
