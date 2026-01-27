@@ -46,7 +46,7 @@ public class EmailOTPValidationRequireAction implements RequiredActionProvider, 
     public void requiredActionChallenge(RequiredActionContext context) {
         try {
             this.generateOtp(context, false);
-            context.challenge(this.challenge(context, null, null));
+            context.challenge(this.challenge(context, null, "infoSendingEmailOtp"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             context.failure();
