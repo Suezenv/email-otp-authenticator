@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.1](https://github.com/Suezenv/email-otp-authenticator/compare/v1.3.0...v1.3.1) (2026-01-27)
+
+
+### Features
+
+* **messages:** add info messages ([d45576c](https://github.com/Suezenv/email-otp-authenticator/commit/d45576c7c1154a33dd887183b1bde350ce4dd73f))
+
+
+### Miscellaneous Chores
+
+* release 1.3.1 ([11bf82b](https://github.com/Suezenv/email-otp-authenticator/commit/11bf82b60263e3701e4ebcbc282c8995955fbea8))
+
 ## [1.3.0](https://github.com/Suezenv/email-otp-authenticator/compare/v1.2.2...v1.3.0) (2026-01-05)
 
 
