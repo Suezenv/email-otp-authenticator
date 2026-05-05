@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2](https://github.com/Suezenv/email-otp-authenticator/compare/v1.3.1...v1.3.2) (2026-05-05)
+
+
+### Bug Fixes
+
+* **email:** fix alias name ([ce9d84e](https://github.com/Suezenv/email-otp-authenticator/commit/ce9d84e7b437ec179e99b8fd6c84528f628d0de2))
+* **email:** fix alias name ([398a925](https://github.com/Suezenv/email-otp-authenticator/commit/398a925f1d843caaf1f53a1940a6617982ef17f4))
+
 ## [1.3.1](https://github.com/Suezenv/email-otp-authenticator/compare/v1.3.0...v1.3.1) (2026-01-27)
 
 
