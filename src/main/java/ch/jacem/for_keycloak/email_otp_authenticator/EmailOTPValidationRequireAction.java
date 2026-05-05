@@ -33,9 +33,9 @@ public class EmailOTPValidationRequireAction implements RequiredActionProvider, 
     @Override
     public void evaluateTriggers(RequiredActionContext context) {
         // TODO: get the alias from somewhere else or move config into realm or application scope
-        AuthenticatorConfigModel config = context.getRealm().getAuthenticatorConfigByAlias("sms-2fa");
+        AuthenticatorConfigModel config = context.getRealm().getAuthenticatorConfigByAlias("email-2fa");
         if (config == null) {
-            logger.error("Failed to check 2FA enforcement, no config alias sms-2fa found");
+            logger.error("Failed to check 2FA enforcement, no config alias email-2fa found");
             return;
         }
 
