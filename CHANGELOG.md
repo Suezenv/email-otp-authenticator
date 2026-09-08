@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3](https://github.com/Suezenv/email-otp-authenticator/compare/v1.3.2...v1.3.3) (2026-09-08)
+
+
+### Miscellaneous Chores
+
+* **main:** release 1.3.2 ([054345b](https://github.com/Suezenv/email-otp-authenticator/commit/054345b0b0ab376c9f3d04abf40933c223fd373e))
+* release 1.3.3 ([822fe52](https://github.com/Suezenv/email-otp-authenticator/commit/822fe5295acc323b2c4e692a0fb4bfc349231e74))
+
 ## [1.3.2](https://github.com/Suezenv/email-otp-authenticator/compare/v1.3.1...v1.3.2) (2026-05-05)
 
 
